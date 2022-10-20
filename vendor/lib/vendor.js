@@ -34,7 +34,7 @@ class Vendor {
       MessageDeduplicationId: chance.guid(),
     }
     sns.publish(payload).promise()
-    .then(data => console.log(data))
+    .then(data => console.log(order.customer, data))
     .catch(error => console.log(error))
   }
 }
