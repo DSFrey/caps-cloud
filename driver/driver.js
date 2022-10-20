@@ -6,6 +6,7 @@ const { Producer } = require('sqs-producer');
 
 const app = Consumer.create({
   queueUrl: `${process.env.SQS_URL}/driver-queue.fifo`,
+  pollingWaitTimeMs : 3000,
   handleMessage: async (data) => {
     let order = JSON.parse(JSON.parse(data.Body).Message);
     console.log(order);
@@ -20,8 +21,10 @@ const app = Consumer.create({
       region: 'us-east-2',
     });
 
-    let response = await producer.send(payload);
-    console.log(response);
+    setTimeout(async () => {
+      let response = await producer.send(payload);
+      console.log(order.vendorID, response);
+    }, 5000)
   }
 });
 
