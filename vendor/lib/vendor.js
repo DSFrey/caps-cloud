@@ -8,11 +8,17 @@ require('dotenv').config();
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
 const sns = new AWS.SNS();
-    console.log(process.env.SNS_ARN);
+const { Consumer } = require('sqs-consumer');
+
 
 class Vendor {
   constructor(vendorName) {
     this.vendorName = vendorName;
+    const sqs = Consumer.create({
+      queueUrl: `${process.env.SQS_URL}/${vendorName}`,
+      handleMessage: async (data) => console.log(JSON.parse(data.Body)),
+    });
+    sqs.start();
   }
   createOrder() {
     let order = {
